@@ -1,0 +1,29 @@
+mod = Sequential()
+mod.add(Conv1D(filters=16,kernel_size=3,activation='relu',input_shape=(25,1)))
+mod.add(BatchNormalization())
+mod.add(Dropout(0.2))
+
+mod.add(Conv1D(32,3,activation='relu'))
+mod.add(BatchNormalization())
+mod.add(Dropout(0.2))
+
+mod.add(Conv1D(32,3,activation='relu'))
+mod.add(BatchNormalization())
+mod.add(Dropout(0.2))
+
+mod.add(Flatten())
+
+mod.add(Dense(32,activation='relu'))
+mod.add(Dropout(0.2))
+
+mod.add(Dense(16,activation='relu'))
+mod.add(Dropout(0.2))
+
+mod.add(Dense(32,activation='relu'))
+mod.add(Dropout(0.2))
+
+mod.add(Dense(1,activation='sigmoid'))
+
+mod.summary()
+
+tf.keras.utils.plot_model(mod, to_file='model.png', show_shapes=True, show_dtype=False,show_layer_names=True, rankdir='TB', expand_nested=False, dpi=96)
