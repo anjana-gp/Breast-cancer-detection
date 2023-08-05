@@ -1,0 +1,49 @@
+import keras
+layer_name = 'dense_3'
+intermediate_layer_model = keras.Model(inputs=mod.input,
+                                       outputs=mod.get_layer(layer_name).output)
+intermediate_layer_model.summary() 
+
+#predcition of the intermediate model
+
+y_train_pred = intermediate_layer_model.predict(X_train)
+y_valid_pred = intermediate_layer_model.predict(X_test)
+
+
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import make_scorer
+from sklearn.metrics import f1_score
+from sklearn.metrics import recall_score
+from sklearn.metrics import precision_score
+from sklearn.metrics import roc_auc_score
+from sklearn.metrics import recall_score
+from sklearn.metrics import brier_score_loss
+from sklearn.metrics import confusion_matrix
+
+#predictions of the sequential model given to a ML model
+print("for SVC")
+
+y_val = label_binarize(y_test, classes=[0,1])
+# classifier
+clf = make_pipeline(StandardScaler(),SVC(probability=True))
+clf = OneVsOneClassifier(clf)
+y_score = clf.fit(y_train_pred, y_train).decision_function(y_valid_pred)
+
+for i in range(2063):
+  if y_score[i]<0 :
+    y_score[i] = 0
+  else:
+    y_score[i]= 1
+
+acc = accuracy_score(y_test,y_score)
+pre=precision_score(y_test,y_score)
+f1= f1_score(y_test,y_score)
+roc = roc_auc_score(y_test,y_score)
+recall= recall_score(y_test,y_score)
+loss=brier_score_loss(y_test,y_score)
+
+print('Confusion matrix',confusion_matrix(y_test,y_score))
+
+print(acc,pre,f1,roc,recall,loss)
+
+#Similar to the above SVC-sequential hybrid model, other ML-sequential hybrid model can be done
