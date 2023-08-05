@@ -1,0 +1,44 @@
+from google.colab import drive
+drive.mount('/content/drive')
+
+from tensorflow.keras.preprocessing import image
+import matplotlib.pyplot as plt
+import numpy as np
+import tensorflow as tf
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+#import all necessary layers
+from tensorflow.keras.layers import Input, DepthwiseConv1D, GlobalAveragePooling2D
+from tensorflow.keras.layers import Conv1D, BatchNormalization
+from tensorflow.keras.layers import ReLU, AvgPool1D, Flatten, Dense
+from tensorflow.keras import Model
+from tensorflow.keras.optimizers.legacy import Adam
+
+df = pd.read_csv("GLCM_all_features.csv")
+LEncoder = LabelEncoder()
+
+df['label'] = LEncoder.fit_transform(df['label'])
+
+X = df.drop('label',axis=1).values
+y = df['label'].values
+
+random_state = 42
+
+x_train, x_test, y_train, y_test = train_test_split(X,y, test_size=0.2, random_state=random_state)
+
+sc = StandardScaler()
+
+X_train = sc.fit_transform(x_train)
+X_test= sc.transform(x_test)
+
+print(X_train.shape,X_test.shape,y_train.shape,y_test.shape)
+
+
+#reshape image
+X_train = X_train.reshape(8248,25,1)
+X_test = X_test.reshape(2063,25,1)
+
+
+#X_train = np.expand_dims(X_train , 0),X_test = np.expand_dims(X_test , 0)
